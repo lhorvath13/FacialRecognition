@@ -24,7 +24,7 @@ IMG_H, IMG_W, NUM_CHANNELS = 224, 224, 3
 MEAN_PIXEL = np.array([104., 117., 123.]).reshape((1, 1, 3))
 TRAIN_DIR = '../images/train'  # TODO
 VAL_DIR = '../images/validation'  # TODO
-NUM_EPOCHS = 1  # TODO was 5
+NUM_EPOCHS = 5  # TODO was 5
 BATCH_SIZE = 16
 NUM_CLASSES = 20  # TODO
 
@@ -102,10 +102,10 @@ def main():
 #        steps_per_epoch=X_train.input_shape[0],
 #        epochs=NUM_EPOCHS,
 #        validation_data=(X_val, Y_val))
-    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), epochs=NUM_EPOCHS)
+    model.fit(X_train, Y_train, validation_data=(X_val, Y_val), batch_size=BATCH_SIZE, epochs=NUM_EPOCHS)
 
     # TODO: Save model weights
-    model.Save('small_last4.h5')
+    model.save_weights('small_last4.h5')
 
     print 'model weights saved.'
     return
