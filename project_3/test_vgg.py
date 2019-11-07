@@ -15,12 +15,14 @@ import cv2
 from keras.models import Model, load_model
 from keras.utils.np_utils import to_categorical
 
-TEST_DIR = '../data/test'  # TODO
-MODEL_PATH = '/home/ec2-user/vgg16_new_version_weights.h5'  # TODO
+from train_vgg import load_model
+
+TEST_DIR = '../images/test'  # TODO
+MODEL_PATH = './FINAL_WEIGHTS.h5'  # TODO
 IMG_H, IMG_W, NUM_CHANNELS = 224, 224, 3
 MEAN_PIXEL = np.array([104., 117., 123.]).reshape((1, 1, 3))
 BATCH_SIZE = 16
-NUM_CLASSES = 20  # TODO
+NUM_CLASSES = 17  # TODO
 
 
 def load_data(src_path):
@@ -47,11 +49,15 @@ def load_data(src_path):
 
 def main():
     # TODO: load model
+    model = load_model()
+    model.load_weights(MODEL_PATH)
 
     # compute test accuracy
     print 'Load test data:'
     X_test, Y_test = load_data(TEST_DIR)
     # TODO: get accuracy
+    classes = model.evaluate(X_test, Y_test, batch_size=BATCH_SIZE)
+    print(classes)
 
     return
 

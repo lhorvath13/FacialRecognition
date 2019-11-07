@@ -9,6 +9,9 @@ Use this as a template to:
 4. save weights
 """
 
+from keras import models
+from keras import layers
+
 from keras.models import Model
 from keras.applications.vgg16 import VGG16
 from keras import optimizers
@@ -26,7 +29,7 @@ TRAIN_DIR = '../images/train'  # TODO
 VAL_DIR = '../images/validation'  # TODO
 NUM_EPOCHS = 5  # TODO was 5
 BATCH_SIZE = 16
-NUM_CLASSES = 20  # TODO
+NUM_CLASSES = 17  # TODO was 20
 
 
 def load_model():
@@ -38,12 +41,13 @@ def load_model():
     base_out = base_model.output
     # TODO: add a flatten layer, a dense layer with 256 units, a dropout layer with 0.5 rate,
     # TODO: and another dense layer for output. The final layer should have the same number of units as classes
-    flatten = Flatten()(base_model.output)
-    dense = Dense(256)(flatten)
-    drop = Dropout(0.5)(dense)
-    predictions = Dense(NUM_CLASSES)(drop)
+    model = models.Sequential()
+    model.add(base_model)
+    model.add(layers.Flatten())
+    model.add(layers.Dense(256, activation='relu'))
+    model.add(layers.Dropout(0.5))
+    model.add(layers.Dense(NUM_CLASSES, activation='softmax'))
 
-    model = Model(inputs=base_model.input, outputs=predictions)
     print 'Build model'
     model.summary()
 
@@ -91,21 +95,10 @@ def main():
     print 'Load val data:'
     X_val, Y_val = load_data(VAL_DIR)
     # TODO: Train model
-#    train_generator = train_datagen.flow_from_directory(
-#        train_dir,
-#        target_size=(image_size, image_size),
-#        batch_size=train_batchsize,
-#        class_mode='categorical')
-#
-#    history = model.fit_generator(
-#        train_generator,
-#        steps_per_epoch=X_train.input_shape[0],
-#        epochs=NUM_EPOCHS,
-#        validation_data=(X_val, Y_val))
     model.fit(X_train, Y_train, validation_data=(X_val, Y_val), batch_size=BATCH_SIZE, epochs=NUM_EPOCHS)
 
     # TODO: Save model weights
-    model.save_weights('small_last4.h5')
+    model.save_weights('FINAL_WEIGHTS.h5')
 
     print 'model weights saved.'
     return
